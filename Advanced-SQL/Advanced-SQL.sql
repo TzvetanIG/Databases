@@ -319,23 +319,17 @@ DROP TABLE EmployeesProjects
 ROLLBACK TRAN
 
 -- Problem 34.	Find how to use temporary tables in SQL Server.
-BEGIN TRAN
-CREATE TABLE #EmployeesProjects(
-	EmployeeID int NOT NULL,
-	ProjectID int NOT NULL,
- ) 
-
- INSERT #EmployeesProjects
- SELECT * FROM EmployeesProjects
-
+SELECT * INTO ##TempTableProjects
+FROM EmployeesProjects
+ 
  DROP TABLE EmployeesProjects
+ 
+ CREATE TABLE EmployeesProjects
+  (
+   EmployeeID INT FOREIGN KEY REFERENCES Employees(EmployeeID) NOT NULL,
+   ProjectID INT FOREIGN KEY REFERENCES Projects(ProjectID) NOT NULL,
+  )
+ 
+ INSERT INTO EmployeesProjects
+ SELECT * FROM  ##TempTableProjects
 
- CREATE TABLE EmployeesProjects(
-	EmployeeID int NOT NULL,
-	ProjectID int NOT NULL,
- ) 
-
- INSERT EmployeesProjects
- SELECT * FROM tempdb.#EmployeesProjects
-
- ROLLBACK TRAN
